@@ -36,10 +36,10 @@ WORKDIR /home/container
 RUN mkdir -p /home/container/dcs && mkdir -p /home/container/config
 
 # Symlink /config -> /home/container/config for compatibility
-RUN sudo ln -s /home/container/config /config
+RUN ln -s /home/container/config /config
 
 # Symlink /app/dcs_server -> /home/container/dcs
-RUN sudo mkdir -p /home/container/dcs_server && sudo ln -s /home/container/dcs_server /app/dcs_server
+RUN mkdir -p /home/container/dcs_server && ln -s /home/container/dcs_server /app/dcs_server
 
 # ================================
 # Copy Aterfax service scripts
