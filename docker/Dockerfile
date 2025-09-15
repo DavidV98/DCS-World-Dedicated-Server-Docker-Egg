@@ -29,8 +29,6 @@ RUN wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/wine
 
 # Create the container user and set home
 RUN useradd -m container
-USER container
-WORKDIR /home/container
 
 # Make Pterodactyl data folder
 RUN mkdir -p /home/container/dcs && mkdir -p /home/container/config
@@ -40,6 +38,10 @@ RUN ln -s /home/container/config /config
 
 # Symlink /app/dcs_server -> /home/container/dcs
 RUN mkdir -p /home/container/dcs_server && ln -s /home/container/dcs_server /app/dcs_server
+
+# Switch to container user
+USER container
+WORKDIR /home/container
 
 # ================================
 # Copy Aterfax service scripts
