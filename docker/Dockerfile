@@ -1,21 +1,50 @@
 #
-# DCS-World-Dedicated-Server-Docker Dockerfile.
-# aterfax/dcs-world-dedicated-server
+# DCS-World-Dedicated-Server-Docker Dockerfile (Pterodactyl-ready).
+# Based on Aterfax’s version, modified for Pterodactyl Panel.
 #
+
 FROM lscr.io/linuxserver/webtop:debian-xfce
 
-LABEL maintainer="Aterfax"
+LABEL maintainer="Aterfax, adapted for Pterodactyl by YOU"
 
 # Enable 32 bit arch
 RUN sudo dpkg --add-architecture i386 ; apt update
 
-# Wine for running EXE
-RUN apt-get update && apt-get install -y --no-install-recommends unzip wine wine64 wine32:i386 libfreetype6 fonts-freefont-ttf wget cabextract xdotool xdg-utils xvfb git python3 python3-dev python3-pip p7zip-full grep socat nano vim
+# Install Wine and dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    unzip wine wine64 wine32:i386 \
+    libfreetype6 fonts-freefont-ttf \
+    wget cabextract xdotool xdg-utils xvfb \
+    git python3 python3-dev python3-pip \
+    p7zip-full grep socat nano vim
 
-# Download the latest winetricks script (master="latest version") from Github.
-RUN wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks && chmod +x winetricks
-RUN mv winetricks /usr/bin
+# Download latest winetricks
+RUN wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
+    && chmod +x winetricks \
+    && mv winetricks /usr/bin
 
+# ================================
+# Adjust paths for Pterodactyl
+# ================================
+
+# Create the container user and set home
+RUN useradd -m container
+USER container
+WORKDIR /home/container
+
+# Make Pterodactyl data folder
+RUN mkdir -p /home/container/dcs && mkdir -p /home/container/config
+
+# Symlink /config -> /home/container/config for compatibility
+RUN sudo ln -s /home/container/config /config
+
+# Symlink /app/dcs_server -> /home/container/dcs
+RUN sudo mkdir -p /home/container/dcs_server && sudo ln -s /home/container/dcs_server /app/dcs_server
+
+# ================================
+# Copy Aterfax service scripts
+# (still needed for Wine setup, installers, etc.)
+# ================================
 RUN mkdir /config/.wine && chown abc:users -R /config/.wine
 RUN mkdir /config/.cache && chown abc:users -R /config/.cache
 
@@ -27,7 +56,6 @@ RUN touch etc/s6-overlay/s6-rc.d/user/contents.d/init-socat-dns-forwarding-longr
 
 COPY ./src/s6-services/s6-init-winepreqs-oneshot /etc/s6-overlay/s6-rc.d/init-winepreqs-oneshot
 RUN touch etc/s6-overlay/s6-rc.d/user/contents.d/init-winepreqs-oneshot
-
 
 COPY ./src/s6-services/s6-init-desktop-setup-oneshot /etc/s6-overlay/s6-rc.d/init-desktop-setup-oneshot
 RUN touch etc/s6-overlay/s6-rc.d/user/contents.d/init-desktop-setup-oneshot
@@ -59,3 +87,14 @@ RUN chmod +x -R /app/dcs_server/get_dl_link
 # Add branding here to avoid it getting split into pieces in the output.
 COPY ./src/branding /etc/s6-overlay/s6-rc.d/init-adduser/branding2
 RUN sed -i '/cat \/etc\/s6-overlay\/s6-rc.d\/init-adduser\/branding/a\cat \/etc\/s6-overlay\/s6-rc.d\/init-adduser\/branding2' /etc/s6-overlay/s6-rc.d/init-adduser/run
+
+# ================================
+# Entrypoint for Pterodactyl
+# ================================
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+EXPOSE 10308/tcp
+EXPOSE 10308/udp
+
+ENTRYPOINT ["/entrypoint.sh"]
