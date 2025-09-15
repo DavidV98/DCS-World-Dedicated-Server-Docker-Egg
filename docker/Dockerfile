@@ -39,10 +39,6 @@ RUN ln -s /home/container/config /config
 # Symlink /app/dcs_server -> /home/container/dcs
 RUN mkdir -p /home/container/dcs_server && ln -s /home/container/dcs_server /app/dcs_server
 
-# Switch to container user
-USER container
-WORKDIR /home/container
-
 # ================================
 # Copy Aterfax service scripts
 # (still needed for Wine setup, installers, etc.)
@@ -89,6 +85,12 @@ RUN chmod +x -R /app/dcs_server/get_dl_link
 # Add branding here to avoid it getting split into pieces in the output.
 COPY ./src/branding /etc/s6-overlay/s6-rc.d/init-adduser/branding2
 RUN sed -i '/cat \/etc\/s6-overlay\/s6-rc.d\/init-adduser\/branding/a\cat \/etc\/s6-overlay\/s6-rc.d\/init-adduser\/branding2' /etc/s6-overlay/s6-rc.d/init-adduser/run
+
+# ================================
+# Switch to non-root user for Pterodactyl
+# ================================
+USER container
+WORKDIR /home/container
 
 # ================================
 # Entrypoint for Pterodactyl
