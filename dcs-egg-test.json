@@ -10,7 +10,7 @@
     "description": "Runs the DCS World Dedicated Server using a custom Docker image built for Pterodactyl.",
     "features": null,
     "docker_images": {
-        DCS World Dedicated Server Docker (latest):     "ghcr.io/davidv98/dcs-dedi-serv-pterodactyl:latest"
+        "DCS World Dedicated Server Docker (latest)": "ghcr.io/davidv98/dcs-dedi-serv-pterodactyl:latest"
     },
     "file_denylist": [],
     "startup": "/entrypoint.sh --port {{SERVER_PORT}}",
