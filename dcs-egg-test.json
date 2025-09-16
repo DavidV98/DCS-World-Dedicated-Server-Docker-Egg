@@ -1,0 +1,18 @@
+{
+  "_comment": "DCS Dedicated Server Minimal",
+  "meta": { "version": "PTDL_v2", "update_url": null },
+  "exported_at": "2025-09-16T12:00:00+00:00",
+  "name": "DCS Dedicated Server",
+  "author": "David",
+  "description": "Minimal working egg for testing",
+  "docker_images": {
+    "ghcr.io/davidv98/dcs-dedi-serv-pterodactyl:latest": "Latest stable build"
+  },
+  "file_denylist": [],
+  "startup": "/entrypoint.sh",
+  "config": { "files": "{}", "startup": "{SERVER_PORT}", "logs": "{}", "stop": "^^C" },
+  "scripts": { "installation": { "script": "echo 'Nothing to install'", "container": "debian:bullseye-slim", "entrypoint": "bash" } },
+  "variables": [
+    { "name": "Server Port", "description": "Port to run on", "env_variable": "SERVER_PORT", "default_value": "10308", "user_viewable": true, "user_editable": true, "rules": "required|numeric" }
+  ]
+}
