@@ -37,6 +37,7 @@ RUN chown container:container -R /home/container/config
 
 # Symlink /config -> /home/container/config for compatibility
 RUN ln -s /home/container/config /config
+RUN chown container:container -R /config
 
 # Symlink /app/dcs_server -> /home/container/dcs
 RUN mkdir -p /home/container/dcs_server
