@@ -5,7 +5,7 @@
 
 FROM lscr.io/linuxserver/webtop:debian-xfce
 
-LABEL maintainer="Aterfax, adapted for Pterodactyl by YOU"
+LABEL maintainer="Aterfax, adapted for Pterodactyl by David"
 
 # Enable 32 bit arch
 RUN sudo dpkg --add-architecture i386 ; apt update
@@ -32,6 +32,8 @@ RUN useradd -m container
 
 # Make Pterodactyl data folder
 RUN mkdir -p /home/container/dcs && mkdir -p /home/container/config
+RUN chown container:container -R /home/container/dcs
+RUN chown container:container -R /home/container/config
 
 # Symlink /config -> /home/container/config for compatibility
 RUN ln -s /home/container/config /config
@@ -39,7 +41,9 @@ RUN ln -s /home/container/config /config
 # Symlink /app/dcs_server -> /home/container/dcs
 RUN mkdir -p /home/container/dcs_server
 RUN chown container:container -R /home/container/dcs_server
+RUN mkdir -p /app && chown container:container -R /app
 RUN ln -s /home/container/dcs_server /app/dcs_server
+RUN chown container:container -R /app/dcs_server
 
 # ================================
 # Copy Aterfax service scripts
