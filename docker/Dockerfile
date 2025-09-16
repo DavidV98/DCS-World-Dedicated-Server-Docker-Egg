@@ -38,13 +38,15 @@ RUN ln -s /home/container/config /config
 
 # Symlink /app/dcs_server -> /home/container/dcs
 RUN mkdir -p /home/container/dcs_server && ln -s /home/container/dcs_server /app/dcs_server
+RUN chown container:container -R /home/container/dcs_server
+RUN chown container:container -R /app/dcs_server
 
 # ================================
 # Copy Aterfax service scripts
 # (still needed for Wine setup, installers, etc.)
 # ================================
-RUN mkdir /config/.wine && chown abc:users -R /config/.wine
-RUN mkdir /config/.cache && chown abc:users -R /config/.cache
+RUN mkdir /config/.wine && chown container:container -R /config/.wine
+RUN mkdir /config/.cache && chown container:container -R /config/.cache
 
 COPY ./src/s6-services/s6-init-migrate-dcs-oneshot /etc/s6-overlay/s6-rc.d/init-migrate-dcs-oneshot
 RUN touch etc/s6-overlay/s6-rc.d/user/contents.d/init-migrate-dcs-oneshot
