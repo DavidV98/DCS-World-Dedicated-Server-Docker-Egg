@@ -1,0 +1,32 @@
+{
+  "_comment": "DCS World Dedicated Server (Docker-based, fork of Aterfax)",
+  "name": "DCS Dedicated Server (Docker)",
+  "author": "David",
+  "description": "Runs the DCS World Dedicated Server using a custom Docker image built for Pterodactyl.",
+  "image": "ghcr.io/davidv98/dcs-dedi-serv-pterodactyl:latest",
+  "startup": "/entrypoint.sh",
+  "config": {
+    "files": "{}",
+    "startup": "{SERVER_PORT}",
+    "logs": "{}",
+    "stop": "^^C"
+  },
+  "scripts": {
+    "installation": {
+      "script": "echo 'This egg uses a prebuilt Docker image. Nothing to install here.'",
+      "container": "debian:bullseye-slim",
+      "entrypoint": "bash"
+    }
+  },
+  "variables": [
+    {
+      "name": "Server Port",
+      "description": "Port the DCS server will run on.",
+      "env_variable": "SERVER_PORT",
+      "default_value": "10308",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|numeric"
+    }
+  ]
+}
