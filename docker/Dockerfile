@@ -87,17 +87,20 @@ COPY ./src/branding /etc/s6-overlay/s6-rc.d/init-adduser/branding2
 RUN sed -i '/cat \/etc\/s6-overlay\/s6-rc.d\/init-adduser\/branding/a\cat \/etc\/s6-overlay\/s6-rc.d\/init-adduser\/branding2' /etc/s6-overlay/s6-rc.d/init-adduser/run
 
 # ================================
+# Entrypoint file for Pterodactyl
+# ================================
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# ================================
 # Switch to non-root user for Pterodactyl
 # ================================
 USER container
 WORKDIR /home/container
 
 # ================================
-# Entrypoint for Pterodactyl
+# Entrypoint setup for Pterodactyl
 # ================================
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
 EXPOSE 10308/tcp
 EXPOSE 10308/udp
 
