@@ -12,8 +12,23 @@ echo "====================================="
 : "${SERVER_PORT:=10308}"
 
 export TZ
+
+# Environment
 export WINEPREFIX=/config/.wine
-export DISPLAY=:0
+export DISPLAY=:99  # pick a display number
+XVFB_LOG=/tmp/xvfb.log
+
+# Start Xvfb in the background
+echo "[INFO] Starting Xvfb..."
+Xvfb $DISPLAY -screen 0 1920x1080x24 &> $XVFB_LOG &
+sleep 2  # give Xvfb a moment to start
+
+# Check that DISPLAY works
+if ! xdpyinfo -display $DISPLAY &>/dev/null; then
+    echo "[ERROR] Xvfb did not start correctly. See log at $XVFB_LOG"
+    exit 1
+fi
+
 export DCS_SERVER_DIR=/app/dcs_server
 
 # Initialize Wine prefix if missing
