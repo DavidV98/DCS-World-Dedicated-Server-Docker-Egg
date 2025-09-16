@@ -27,6 +27,7 @@ RUN wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/wine
 RUN useradd -m container
 RUN mkdir -p /home/container/dcs_server && mkdir -p /home/container/config
 RUN chown -R container:container /home/container
+RUN mkdir -p /app && chown container:container -R /app
 
 # Symlink for compatibility
 RUN ln -s /home/container/config /config
