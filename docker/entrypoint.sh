@@ -12,8 +12,6 @@ echo "====================================="
 # Ensure required environment variables have defaults
 : "${AUTOSTART:=1}"
 : "${DCSAUTOINSTALL:=0}"
-: "${PUID:=1000}"
-: "${PGID:=1000}"
 : "${TZ:=UTC}"
 
 # Export Wine and config paths
@@ -21,11 +19,10 @@ export WINEPREFIX=/config/.wine
 export DISPLAY=:0
 export DCS_SERVER_DIR=/app/dcs_server
 
-# Create /config directory if missing
+# Ensure /config directory exists
 mkdir -p /config
-chown -R $PUID:$PGID /config
 
-# Fix permissions for DCS scripts
+# Fix permissions for DCS scripts (make executable)
 chmod +x $DCS_SERVER_DIR/wine-dedicated-dcs-automated-installer
 chmod +x $DCS_SERVER_DIR/desktop-setup
 
