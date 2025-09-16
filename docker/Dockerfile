@@ -24,14 +24,15 @@ RUN wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/wine
     && mv winetricks /usr/local/bin
 
 # Create container user and directories
-RUN useradd -m container \
-    && mkdir -p /home/container/dcs_server \
-    && mkdir -p /home/container/config \
-    && chown -R container:container /home/container
+RUN useradd -m container
+RUN mkdir -p /home/container/dcs_server && mkdir -p /home/container/config
+RUN chown -R container:container /home/container
 
 # Symlink for compatibility
-RUN ln -s /home/container/config /config \
-    && ln -s /home/container/dcs_server /app/dcs_server
+RUN ln -s /home/container/config /config
+RUN ln -s /home/container/dcs_server /app/dcs_server
+RUN chown container:container -R /config
+RUN chown container:container -R /app/dcs_server
 
 # Copy server scripts
 COPY ./src/wine-dedicated-dcs-automated-installer /app/dcs_server/
