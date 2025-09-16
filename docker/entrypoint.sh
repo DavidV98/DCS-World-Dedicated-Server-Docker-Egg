@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if [ -z "$XDG_RUNTIME_DIR" ]; then
+    export XDG_RUNTIME_DIR="/tmp/xdg-runtime-dir"
+    mkdir -p $XDG_RUNTIME_DIR
+    chmod 700 $XDG_RUNTIME_DIR
+fi
+
 # -----------------------
 # Configurable defaults
 # -----------------------
@@ -31,7 +37,7 @@ if ! pgrep -x Xvfb >/dev/null 2>&1; then
   # start Xvfb in background; redirect output to a logfile for debugging
   Xvfb "${DISPLAY}" ${XVFB_SCREEN} &> "${XVFB_LOG}" &
   # give it a moment
-  sleep 0.8
+  sleep 2
 fi
 
 # Quick check if DISPLAY usable
